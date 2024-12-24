@@ -17,5 +17,6 @@ public interface SensorDataRepository extends JpaRepository<SensorData, Long> {
             @Param("fromDate") LocalDateTime fromDate,
             @Param("toDate") LocalDateTime toDate
     );
+
 }
 

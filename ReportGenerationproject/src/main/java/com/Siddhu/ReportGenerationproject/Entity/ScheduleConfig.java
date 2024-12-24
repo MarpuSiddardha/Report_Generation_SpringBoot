@@ -52,5 +52,6 @@ public class ScheduleConfig {
     @Column(name = "next_run")
     private LocalDateTime nextRun;
 
+
     // Getters and Setters
 }

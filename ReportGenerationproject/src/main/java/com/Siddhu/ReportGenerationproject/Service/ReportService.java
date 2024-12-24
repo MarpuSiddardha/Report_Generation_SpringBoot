@@ -8,7 +8,6 @@ import com.Siddhu.ReportGenerationproject.Utils.ReportPdfGenerator;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import java.io.File;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -95,15 +94,6 @@ public class ReportService {
         return reportMetadataRepository.findReportsByDateRangeAndType(fromDate, toDate, reportType);
     }
 
-
-//    // Delete reports by report type
-//    public void deleteReportsByType(String reportType) {
-//        List<ReportMetadata> reports = reportMetadataRepository.findByReportType(reportType);
-//        if (reports.isEmpty()) {
-//            throw new IllegalArgumentException("No reports found for the specified report type.");
-//        }
-//        reportMetadataRepository.deleteAll(reports);
-//    }
 }
 
 

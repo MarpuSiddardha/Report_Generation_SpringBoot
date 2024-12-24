@@ -1,9 +1,10 @@
 package com.Siddhu.ReportGenerationproject.Controller;
 
 import com.Siddhu.ReportGenerationproject.Entity.ScheduleConfig;
+import com.Siddhu.ReportGenerationproject.Repository.ScheduleConfigRepository;
 import com.Siddhu.ReportGenerationproject.Service.ScheduleService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDateTime;
 
 @RestController
@@ -11,12 +12,13 @@ import java.time.LocalDateTime;
 public class ScheduleController {
 
     private final ScheduleService scheduleService;
+    private final ScheduleConfigRepository scheduleConfigRepository;
 
-    public ScheduleController(ScheduleService scheduleService) {
+    public ScheduleController(ScheduleService scheduleService, ScheduleConfigRepository  scheduleConfigRepository) {
         this.scheduleService = scheduleService;
+        this.scheduleConfigRepository=scheduleConfigRepository;
     }
 
-    // Configure a new schedule for report generation
     @PostMapping("/configure")
     public ScheduleConfig configureSchedule(@RequestParam String reportType,
                                             @RequestParam String scheduleInterval,
@@ -25,9 +27,30 @@ public class ScheduleController {
         return scheduleService.configureSchedule(reportType, scheduleInterval, nextRunTime);
     }
 
-//    @DeleteMapping("/delete-schedule")
-//    public ScheduleConfig deleteSchedule(@RequestParam String reportType) {
-//        return scheduleService.deleteSchedule(reportType);
-//    }
+
+    @PostMapping("/enable")
+    public ResponseEntity<String> enableReportGeneration() {
+        scheduleService.enableReportGeneration();
+        return ResponseEntity.ok("Report generation enabled.");
+    }
+
+    @PostMapping("/disable")
+    public ResponseEntity<String> disableReportGeneration() {
+        scheduleService.disableReportGeneration();
+        return ResponseEntity.ok("Report generation disabled.");
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteSchedule(@RequestParam String reportType, @RequestParam String scheduleInterval) {
+        try {
+            ScheduleConfig deletedSchedule = scheduleService.deleteSchedule(reportType, scheduleInterval);
+            return ResponseEntity.ok("Schedule for report type '" + reportType + "' and interval '" + scheduleInterval + "' has been deleted.");
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error occurred while deleting the schedule.");
+        }
+    }
+
 
 }
